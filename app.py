@@ -23,12 +23,10 @@ satisfaction_survey = Survey(
 
 # user session data
 responses = []
-current_question = 0
 
 @app.route('/')
 def begin_survey():
     '''Initialize survey, show home page.'''
-    current_question = 0;
     responses = [];
     title = satisfaction_survey.title
     instructions = satisfaction_survey.instructions
@@ -45,13 +43,12 @@ def show_next_question(question):
         choices = Q.choices
         return render_template('question.html', text=text, choices=choices)
     else:
-        raise
-        return 'Survey Over'
+        return render_template('thanks.html')
 
 @app.route('/answer', methods=['POST'])
 def add_answer():
     '''Add answer to list of responses'''
     answer = request.form['answer']
     responses.append(answer)
-    next_question = current_question + 1
+    next_question = len(responses)
     return redirect('/questions/{}'.format(next_question))
