@@ -38,6 +38,7 @@ def show_next_question(question):
     '''Display current question'''
     current_question = question
     if current_question != len(responses):
+        flash('Do not skip ahead! Questions must be answered in order.', 'error')
         return redirect('/questions/{}'.format(len(responses)))
     if current_question < len(satisfaction_survey.questions):
         Q = satisfaction_survey.questions[current_question]
