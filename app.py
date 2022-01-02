@@ -5,6 +5,9 @@ from surveys import Survey, Question
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "surveymachine"
 debug = DebugToolbarExtension(app)
+#disable redirect intercepts
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
 
 #Surveys
 satisfaction_survey = Survey(
@@ -20,17 +23,19 @@ satisfaction_survey = Survey(
 
 # user session data
 responses = []
+current_question = 0
 
 @app.route('/')
 def begin_survey():
     '''Initialize survey, show home page.'''
+    current_question = 0;
+    responses = [];
     title = satisfaction_survey.title
     instructions = satisfaction_survey.instructions
     
     return render_template('home.html', title=title, instructions=instructions)
 
 @app.route('/questions/<int:question>')
-
 def show_next_question(question):
     '''Display current question'''
     current_question = question
@@ -38,8 +43,15 @@ def show_next_question(question):
         Q = satisfaction_survey.questions[current_question]
         text = Q.question
         choices = Q.choices
-        next_question = current_question + 1
-        return render_template('question.html', text=text, choices=choices, next_question=next_question)
+        return render_template('question.html', text=text, choices=choices)
     else:
+        raise
         return 'Survey Over'
-    
+
+@app.route('/answer', methods=['POST'])
+def add_answer():
+    '''Add answer to list of responses'''
+    answer = request.form['answer']
+    responses.append(answer)
+    next_question = current_question + 1
+    return redirect('/questions/{}'.format(next_question))
