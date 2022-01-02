@@ -29,7 +29,17 @@ def begin_survey():
     
     return render_template('home.html', title=title, instructions=instructions)
 
-@app.route('/questions/<question>')
+@app.route('/questions/<int:question>')
+
 def show_next_question(question):
     '''Display current question'''
-    return render_template('question.html')
+    current_question = question
+    if current_question < len(satisfaction_survey.questions):
+        Q = satisfaction_survey.questions[current_question]
+        text = Q.question
+        choices = Q.choices
+        next_question = current_question + 1
+        return render_template('question.html', text=text, choices=choices, next_question=next_question)
+    else:
+        return 'Survey Over'
+    
