@@ -4,9 +4,9 @@ from surveys import Survey, Question
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "surveymachine"
-debug = DebugToolbarExtension(app)
-#disable redirect intercepts
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+# debug = DebugToolbarExtension(app)
+# #disable redirect intercepts
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 
 #Surveys
